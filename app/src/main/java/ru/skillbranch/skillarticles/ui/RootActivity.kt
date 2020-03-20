@@ -5,6 +5,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.layout_bottombar.*
@@ -12,8 +13,11 @@ import kotlinx.android.synthetic.main.layout_bottombar.view.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
+import ru.skillbranch.skillarticles.viewmodels.*
 
 class RootActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: ArticleViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +37,16 @@ class RootActivity : AppCompatActivity() {
         bottombar.btn_settings.setOnClickListener {
             if (submenu.isOpen) submenu.close() else submenu.open()
         }
+
+        val vmFactory = ViewModelFactory("0")
+        viewModel = ViewModelProvider(this, vmFactory).get(ArticleViewModel::class.java)
+        viewModel.observeState(this) {
+            renderUi(it)
+        }
+    }
+
+    private fun renderUi(data: ArticleState) {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     private fun setupToolbar() {

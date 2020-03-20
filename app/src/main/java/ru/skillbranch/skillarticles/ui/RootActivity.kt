@@ -6,10 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.layout_bottombar.*
-import kotlinx.android.synthetic.main.layout_bottombar.view.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
@@ -25,20 +23,6 @@ class RootActivity : AppCompatActivity() {
         setupToolbar()
         setupBottomBar()
         setupSubmenu()
-
-        btn_like.setOnClickListener {
-            Snackbar.make(coordinator_container, "test", Snackbar.LENGTH_LONG)
-                .setAnchorView(bottombar)
-                .show()
-        }
-
-        switch_mode.setOnClickListener {
-            delegate.localNightMode = if (switch_mode.isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-        }
-
-        bottombar.btn_settings.setOnClickListener {
-            if (submenu.isOpen) submenu.close() else submenu.open()
-        }
 
         val vmFactory = ViewModelFactory("0")
         viewModel = ViewModelProvider(this, vmFactory).get(ArticleViewModel::class.java)
@@ -61,7 +45,35 @@ class RootActivity : AppCompatActivity() {
     }
 
     private fun renderUi(data: ArticleState) {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        // bind submenu state
+        btn_settings.setChecked(data.isShowMenu)
+        if (data.isShowMenu) submenu.open() else submenu.close()
+
+        // bind article person data
+        btn_like.setChecked(data.isLike)
+        btn_bookmark.setChecked(data.isBookmark)
+
+        // bind submenu views
+        switch_mode.setChecked(data.isDarkMode)
+        delegate.localNightMode = if (switch_mode.isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+
+        if (data.isBigText) {
+            tv_text_content.textSize = 18f
+            btn_text_up.setChecked(true)
+            btn_text_down.setChecked(false)
+        } else {
+            tv_text_content.textSize = 14f
+            btn_text_up.setChecked(false)
+            btn_text_down.setChecked(true)
+        }
+
+        // bind content
+        tv_text_content.text = if (data.isLoadingContent) "loading" else data.content.first() as String
+
+        // bind toolbar
+        toolbar.title = data.title ?: "loading"
+        toolbar.subtitle = data.category ?: "loading"
+        if (data.categoryIcon != null) toolbar.logo = getDrawable(data.categoryIcon as Int)
     }
 
     private fun setupToolbar() {

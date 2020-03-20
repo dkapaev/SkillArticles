@@ -27,7 +27,7 @@ class ArticleViewModel(articleId: String) : BaseViewModel<ArticleState>(ArticleS
     }
 
     fun handleToggleMenu() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        updateState { it.copy(isShowMenu = !it.isShowMenu) }
     }
 }
 

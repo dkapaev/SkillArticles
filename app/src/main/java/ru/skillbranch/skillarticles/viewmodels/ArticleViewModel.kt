@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import ru.skillbranch.skillarticles.data.ArticleData
 import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
 import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
+import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.format
 
 class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleState>(ArticleState()) {
@@ -62,28 +63,32 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
         return repository.loadArticlePersonalInfo(articleId)
     }
 
+    // app settings
     fun handleUpText() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val settings = currentState.toAppSettings()
+        repository.updateSettings(settings.copy(isBigText = true))
     }
 
     fun handleDownText() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val settings = currentState.toAppSettings()
+        repository.updateSettings(settings.copy(isBigText = false))
     }
 
     fun handleNightMode() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val settings = currentState.toAppSettings()
+        repository.updateSettings(settings.copy(isDarkMode = !settings.isDarkMode))
     }
 
     fun handleLike() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        // TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     fun handleBookmark() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        // TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     fun handleShare() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        // TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     fun handleToggleMenu() {

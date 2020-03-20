@@ -39,6 +39,14 @@
         </TextView>
     </androidx.core.widget.NestedScrollView>
 
+    <ru.skillbranch.skillarticles.ui.custom.ArticleSubmenu
+        android:id="@+id/submenu"
+        android:theme="@style/ArticleBarsTheme"
+        android:layout_width="200dp"
+        android:layout_height="96dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="8dp"/>
+
     <ru.skillbranch.skillarticles.ui.custom.Bottombar
         android:id="@+id/bottombar"
         android:layout_width="match_parent"

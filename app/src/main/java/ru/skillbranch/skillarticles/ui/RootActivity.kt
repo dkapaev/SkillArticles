@@ -18,7 +18,9 @@ class RootActivity : AppCompatActivity() {
         setupToolbar()
 
         btn_like.setOnClickListener {
-            Snackbar.make(coordinator_container, "test", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(coordinator_container, "test", Snackbar.LENGTH_LONG)
+                .setAnchorView(bottombar)
+                .show()
         }
     }
 

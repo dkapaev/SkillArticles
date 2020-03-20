@@ -1,13 +1,65 @@
 package ru.skillbranch.skillarticles.viewmodels
 
+import androidx.lifecycle.LiveData
+import ru.skillbranch.skillarticles.data.ArticleData
+import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
 import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
+import ru.skillbranch.skillarticles.extensions.format
 
-class ArticleViewModel(articleId: String) : BaseViewModel<ArticleState>(ArticleState()) {
+class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleState>(ArticleState()) {
 
     private val repository = ArticleRepository
 
     init {
-        // TODO("not implemented") // subscribe on data
+        // subscribe on mutable data
+        subscribeOnDataSource(getArticleData()) { article, state ->
+            article ?: return@subscribeOnDataSource null
+            state.copy(
+                shareLink = article.shareLink,
+                title = article.title,
+                category = article.category,
+                categoryIcon = article.categoryIcon,
+                date = article.date.format()
+            )
+        }
+
+        subscribeOnDataSource(getArticleContent()) { content, state ->
+            content ?: return@subscribeOnDataSource null
+            state.copy(
+                isLoadingContent = false,
+                content = content
+            )
+        }
+
+        subscribeOnDataSource(getArticlePersonalInfo()) { info, state ->
+            info ?: return@subscribeOnDataSource null
+            state.copy(
+                isBookmark = info.isBookmark,
+                isLike = info.isLike
+            )
+        }
+
+        subscribeOnDataSource(repository.getAppSettings()) { settings, state ->
+            state.copy(
+                isDarkMode = settings.isDarkMode,
+                isBigText = settings.isBigText
+            )
+        }
+    }
+
+    // load text from network
+    private fun getArticleContent(): LiveData<List<Any>?> {
+        return repository.loadArticleContent(articleId)
+    }
+
+    // load data from db
+    private fun getArticleData(): LiveData<ArticleData?> {
+        return repository.getArticle(articleId)
+    }
+
+    // load data from db
+    private fun getArticlePersonalInfo(): LiveData<ArticlePersonalInfo?> {
+        return repository.loadArticlePersonalInfo(articleId)
     }
 
     fun handleUpText() {

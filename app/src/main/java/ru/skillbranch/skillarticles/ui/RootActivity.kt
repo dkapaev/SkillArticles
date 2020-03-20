@@ -23,6 +23,8 @@ class RootActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_root)
         setupToolbar()
+        setupBottomBar()
+        setupSubmenu()
 
         btn_like.setOnClickListener {
             Snackbar.make(coordinator_container, "test", Snackbar.LENGTH_LONG)
@@ -43,6 +45,19 @@ class RootActivity : AppCompatActivity() {
         viewModel.observeState(this) {
             renderUi(it)
         }
+    }
+
+    private fun setupSubmenu() {
+        btn_text_up.setOnClickListener { viewModel.handleUpText() }
+        btn_text_down.setOnClickListener { viewModel.handleDownText() }
+        switch_mode.setOnClickListener { viewModel.handleNightMode() }
+    }
+
+    private fun setupBottomBar() {
+        btn_like.setOnClickListener { viewModel.handleLike() }
+        btn_bookmark.setOnClickListener { viewModel.handleBookmark() }
+        btn_share.setOnClickListener { viewModel.handleShare() }
+        btn_settings.setOnClickListener { viewModel.handleToggleMenu() }
     }
 
     private fun renderUi(data: ArticleState) {

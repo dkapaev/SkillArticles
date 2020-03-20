@@ -1,6 +1,35 @@
 package ru.skillbranch.skillarticles.viewmodels
 
-class ArticleViewModel(articleId: String) : BaseViewModel<ArticleState>(ArticleState())
+class ArticleViewModel(articleId: String) : BaseViewModel<ArticleState>(ArticleState()) {
+
+    fun handleUpText() {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun handleDownText() {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun handleNightMode() {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun handleLike() {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun handleBookmark() {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun handleShare() {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun handleToggleMenu() {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+}
 
 data class ArticleState(
     val isAuth: Boolean = false, // пользователь авторизован

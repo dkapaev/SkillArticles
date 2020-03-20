@@ -5,6 +5,7 @@ import ru.skillbranch.skillarticles.data.ArticleData
 import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
 import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
 import ru.skillbranch.skillarticles.extensions.data.toAppSettings
+import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
 
 class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleState>(ArticleState()) {
@@ -80,7 +81,24 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
     }
 
     fun handleLike() {
-        // TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val toggleLike = {
+            val info = currentState.toArticlePersonalInfo()
+            repository.updateArticlePersonalInfo(info.copy(isLike = !info.isLike))
+        }
+
+        toggleLike()
+
+        val msg = if (currentState.isLike) {
+            Notify.TextMessage(msg = "Mark is liked")
+        } else {
+            Notify.ActionMessage(
+                msg = "Don`t like it anymore", // message
+                actionLabel = "No, still like it", // action label on snackbar
+                actionHandler = toggleLike // handler action, if user pressed "No, still like it" on snackbar, then toggle again
+            )
+        }
+
+        notify(msg)
     }
 
     fun handleBookmark() {
@@ -88,7 +106,8 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
     }
 
     fun handleShare() {
-        // TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val msg = "Share is not implemented"
+        notify(Notify.ErrorMessage(msg, "OK", null))
     }
 
     fun handleToggleMenu() {

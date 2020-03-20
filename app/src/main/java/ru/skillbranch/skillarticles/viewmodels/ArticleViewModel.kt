@@ -1,6 +1,14 @@
 package ru.skillbranch.skillarticles.viewmodels
 
+import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
+
 class ArticleViewModel(articleId: String) : BaseViewModel<ArticleState>(ArticleState()) {
+
+    private val repository = ArticleRepository
+
+    init {
+        // TODO("not implemented") // subscribe on data
+    }
 
     fun handleUpText() {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.

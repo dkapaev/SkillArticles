@@ -1,7 +1,8 @@
-package ru.skillbranch.skillarticles
+package ru.skillbranch.skillarticles.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import ru.skillbranch.skillarticles.R
 
 class RootActivity: AppCompatActivity() {
 

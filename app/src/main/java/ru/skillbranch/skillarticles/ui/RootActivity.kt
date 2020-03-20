@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.layout_bottombar.*
+import kotlinx.android.synthetic.main.layout_bottombar.view.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
@@ -27,6 +28,10 @@ class RootActivity : AppCompatActivity() {
 
         switch_mode.setOnClickListener {
             delegate.localNightMode = if (switch_mode.isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        }
+
+        bottombar.btn_settings.setOnClickListener {
+            if (submenu.isOpen) submenu.close() else submenu.open()
         }
     }
 

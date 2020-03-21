@@ -151,14 +151,14 @@ class ExampleInstrumentedTest {
             )
 
         // change content data
-        NetworkDataHolder.content.value = listOf("long long text content")
+        NetworkDataHolder.content.value = listOf(longText)
 
         vm.state.test()
             .awaitValue()
             .assertValue(
                 "change content data",
                 mapOf(
-                    "content" to listOf("long long text content")
+                    "content" to listOf(longText)
                 ),
                 { it.toMap() }
             )

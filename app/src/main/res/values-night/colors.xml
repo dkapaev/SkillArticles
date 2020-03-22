@@ -12,4 +12,7 @@
     <color name="color_article_bar">#121212</color>
     <color name="color_on_article_bar">#FFFFFF</color>
     <color name="color_divider">#1FFFFFFF</color>
+
+    <color name="color_article_bar_search_text">#FFFFFF</color>
+    <color name="color_article_bar_search_text_hint">#7FFFFFFF</color>
 </resources>

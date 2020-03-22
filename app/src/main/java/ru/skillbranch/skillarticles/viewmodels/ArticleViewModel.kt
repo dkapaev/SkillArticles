@@ -104,7 +104,20 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
     }
 
     override fun handleBookmark() {
-        // TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val toggleBookmark = {
+            val info = currentState.toArticlePersonalInfo()
+            repository.updateArticlePersonalInfo(info.copy(isBookmark = !info.isBookmark))
+        }
+
+        toggleBookmark()
+
+        val msg = if (currentState.isBookmark) {
+            Notify.TextMessage(msg = "Add to bookmarks")
+        } else {
+            Notify.TextMessage(msg = "Remove from bookmarks")
+        }
+
+        notify(msg)
     }
 
     override fun handleShare() {

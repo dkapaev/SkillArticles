@@ -48,13 +48,6 @@ class RootActivity : AppCompatActivity() {
         val searchView: SearchView = searchMenuItem.actionView as SearchView
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-
-        // Customize SearchView text and hint colors
-        val searchEditId = androidx.appcompat.R.id.search_src_text
-        val et = searchView.findViewById(searchEditId) as EditText
-        et.setTextColor(getColor(R.color.color_article_bar_search_text))
-        et.setHintTextColor(getColor(R.color.color_article_bar_search_text_hint))
-
         return true
     }
 

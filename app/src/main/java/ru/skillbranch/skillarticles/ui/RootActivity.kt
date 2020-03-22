@@ -4,7 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
 import android.view.Menu
-import android.widget.EditText
+import android.view.MenuItem
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -43,12 +43,51 @@ class RootActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.article_menu, menu)
-        // Retrieve the SearchView and plug it into SearchManager
         val searchMenuItem = menu.findItem(R.id.action_search)
         val searchView: SearchView = searchMenuItem.actionView as SearchView
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        return true
+
+        // overriding maxWidth here is a workaround that helps SearchView to expand full width
+        searchView.maxWidth = Int.MAX_VALUE
+
+        val articleState = viewModel.currentState
+        if (articleState.isSearch) searchMenuItem.expandActionView() else searchMenuItem.collapseActionView()
+        searchView.setQuery(articleState.searchQuery, false)
+
+        // prevent software keyboard from popping up when activity is recreated
+        searchView.clearFocus()
+
+        searchMenuItem.setOnActionExpandListener(object: MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(menuItem: MenuItem?): Boolean {
+                viewModel.handleSearchMode(true)
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(menuItem: MenuItem?): Boolean {
+                viewModel.handleSearchMode(false)
+                // invalidateOptionsMenu() here is a workaround to avoid search icon being replaced with settings icon
+                invalidateOptionsMenu()
+                return true
+            }
+        })
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // clearFocus() here is a workaround to avoid issues with some emulators
+                // and keyboard devices firing twice if a keyboard enter is used
+                // see https://code.google.com/p/android/issues/detail?id=24599
+                searchView.clearFocus()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.handleSearch(newText)
+                return false
+            }
+        })
+
+        return super.onCreateOptionsMenu(menu)
     }
 
     private fun setupSubmenu() {

@@ -48,6 +48,7 @@
         android:elevation="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        app:layout_behavior="ru.skillbranch.skillarticles.ui.custom.ArticleSubmenuBehavior"
         app:layout_dodgeInsetEdges="bottom"
         android:visibility="gone"
         tools:visibility="visible"/>
@@ -59,6 +60,7 @@
         android:layout_gravity="bottom"
         android:theme="@style/ArticleBarsTheme"
         android:elevation="4dp"
+        app:layout_behavior="ru.skillbranch.skillarticles.ui.custom.BottombarBehavior"
         app:layout_insetEdge="bottom">
     </ru.skillbranch.skillarticles.ui.custom.Bottombar>
 

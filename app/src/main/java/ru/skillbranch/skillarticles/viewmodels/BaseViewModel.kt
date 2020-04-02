@@ -23,7 +23,7 @@ abstract class BaseViewModel<T> (initState: T) : ViewModel() {
      * getter для получения not null значения текущего состояния ViewModel
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
-    val currentState
+    val currentState: T
         get() = state.value!!
 
     /***

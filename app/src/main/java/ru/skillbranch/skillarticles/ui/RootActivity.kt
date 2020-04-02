@@ -22,6 +22,7 @@ import ru.skillbranch.skillarticles.viewmodels.*
 class RootActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ArticleViewModel
+    private lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,7 @@ class RootActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.article_menu, menu)
         val searchMenuItem = menu.findItem(R.id.action_search)
-        val searchView: SearchView = searchMenuItem.actionView as SearchView
+        searchView = searchMenuItem.actionView as SearchView
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
 
@@ -58,7 +59,7 @@ class RootActivity : AppCompatActivity() {
         // prevent software keyboard from popping up when activity is recreated
         searchView.clearFocus()
 
-        searchMenuItem.setOnActionExpandListener(object: MenuItem.OnActionExpandListener {
+        searchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(menuItem: MenuItem?): Boolean {
                 viewModel.handleSearchMode(true)
                 return true
@@ -72,7 +73,7 @@ class RootActivity : AppCompatActivity() {
             }
         })
 
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // clearFocus() here is a workaround to avoid issues with some emulators
                 // and keyboard devices firing twice if a keyboard enter is used
@@ -101,9 +102,31 @@ class RootActivity : AppCompatActivity() {
         btn_bookmark.setOnClickListener { viewModel.handleBookmark() }
         btn_share.setOnClickListener { viewModel.handleShare() }
         btn_settings.setOnClickListener { viewModel.handleToggleMenu() }
+
+        btn_result_up.setOnClickListener {
+            if (::searchView.isInitialized && searchView.hasFocus()) {
+                searchView.clearFocus()
+            }
+            viewModel.handleUpResult()
+        }
+
+        btn_result_down.setOnClickListener {
+            if (::searchView.isInitialized && searchView.hasFocus()) {
+                searchView.clearFocus()
+            }
+            viewModel.handleDownResult()
+        }
+
+        btn_search_close.setOnClickListener {
+            viewModel.handleSearchMode(false)
+            invalidateOptionsMenu()
+        }
     }
 
     private fun renderUi(data: ArticleState) {
+
+        bottombar.setSearchState(data.isSearch)
+
         // bind submenu state
         btn_settings.setChecked(data.isShowMenu)
         if (data.isShowMenu) submenu.open() else submenu.close()

@@ -79,4 +79,8 @@ interface IArticleViewModel {
      * searchView при изменении конфигурации (пересоздании активити)
      */
     fun handleSearch(query: String?)
+
+    fun handleUpResult()
+
+    fun handleDownResult()
 }

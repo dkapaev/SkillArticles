@@ -137,6 +137,14 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
         val refinedQuery = if (query.isNullOrBlank()) null else query
         updateState { it.copy(searchQuery = refinedQuery) }
     }
+
+    override fun handleUpResult() {
+        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun handleDownResult() {
+        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }
 
 data class ArticleState(

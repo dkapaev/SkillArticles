@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -17,19 +16,19 @@ import kotlinx.android.synthetic.main.layout_bottombar.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
+import ru.skillbranch.skillarticles.ui.base.BaseActivity
 import ru.skillbranch.skillarticles.viewmodels.*
+import ru.skillbranch.skillarticles.viewmodels.base.Notify
+import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
 
-class RootActivity : AppCompatActivity() {
+class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
-    private lateinit var viewModel: ArticleViewModel
+    override lateinit var viewModel: ArticleViewModel
+    override val layout: Int = R.layout.activity_root
     private lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_root)
-        setupToolbar()
-        setupBottomBar()
-        setupSubmenu()
 
         val vmFactory = ViewModelFactory("0")
         viewModel = ViewModelProvider(this, vmFactory).get(ArticleViewModel::class.java)
@@ -40,6 +39,32 @@ class RootActivity : AppCompatActivity() {
         viewModel.observeNotifications(this) {
             renderNotification(it)
         }
+    }
+
+    override fun setupViews() {
+        setupToolbar()
+        setupBottomBar()
+        setupSubmenu()
+    }
+
+    override fun renderSearchResult(searchResult: List<Pair<Int, Int>>) {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun renderSearchPosition(searchPosition: Int) {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun clearSearchResult() {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showSearchBar() {
+        bottombar.setSearchState(true)
+    }
+
+    override fun hideSearchBar() {
+        bottombar.setSearchState(false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

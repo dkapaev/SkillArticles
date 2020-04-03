@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.text.getSpans
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
@@ -57,6 +58,10 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         val content = tv_text_content.text as Spannable
         val bgColor = Color.RED
         val fgColor = Color.WHITE
+
+        // clear entry search result
+        clearSearchResult()
+
         searchResult.forEach { (start, end) ->
             content.setSpan(
                 SearchSpan(bgColor, fgColor),
@@ -72,7 +77,9 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     override fun clearSearchResult() {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val content = tv_text_content.text as Spannable
+        val spans = content.getSpans<SearchSpan>()
+        spans.forEach { content.removeSpan(it) }
     }
 
     override fun showSearchBar() {

@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
+import ru.skillbranch.skillarticles.ui.custom.Bottombar
 import kotlin.math.max
 import kotlin.math.min
 
@@ -31,7 +32,9 @@ class BottombarBehavior<V : View>(context: Context, attrs: AttributeSet) :
         consumed: IntArray,
         type: Int
     ) {
+        if (child is Bottombar && !child.isSearchMode) {
+            child.translationY = max(0f, min(child.height.toFloat(), child.translationY + dy))
+        }
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
-        child.translationY = max(0f, min(child.height.toFloat(), child.translationY + dy))
     }
 }

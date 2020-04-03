@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.layout_bottombar.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
+import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.base.BaseActivity
 import ru.skillbranch.skillarticles.viewmodels.*
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
@@ -61,6 +62,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
     override fun showSearchBar() {
         bottombar.setSearchState(true)
+        scroll.setMarginOptionally(bottom = dpToIntPx(56))
     }
 
     override fun hideSearchBar() {
@@ -149,6 +151,8 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     private fun renderUi(data: ArticleState) {
+
+        if (data.isSearch) showSearchBar() else hideSearchBar()
 
         bottombar.setSearchState(data.isSearch)
 

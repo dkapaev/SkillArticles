@@ -8,6 +8,7 @@ import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
 import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
+import ru.skillbranch.skillarticles.extensions.indexesOf
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
@@ -138,16 +139,30 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
     }
 
     override fun handleSearch(query: String?) {
-        val refinedQuery = if (query.isNullOrBlank()) null else query
-        updateState { it.copy(searchQuery = refinedQuery) }
+        var result: List<Pair<Int, Int>> = emptyList()
+        val articleContent: String? = currentState.content.firstOrNull() as? String
+        if (query != null && articleContent != null) {
+            result = articleContent.indexesOf(query).map { it to it + query.length }
+        }
+        updateState { it.copy(searchQuery = query, searchResults = result) }
     }
 
     override fun handleUpResult() {
-        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (currentState.searchResults.isNotEmpty()) {
+            val firstIndex = 0
+            if (currentState.searchPosition > firstIndex) {
+                updateState { it.copy(searchPosition = it.searchPosition - 1) }
+            }
+        }
     }
 
     override fun handleDownResult() {
-        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (currentState.searchResults.isNotEmpty()) {
+            val lastIndex = currentState.searchResults.size - 1
+            if (currentState.searchPosition < lastIndex) {
+                updateState { it.copy(searchPosition = it.searchPosition + 1) }
+            }
+        }
     }
 }
 

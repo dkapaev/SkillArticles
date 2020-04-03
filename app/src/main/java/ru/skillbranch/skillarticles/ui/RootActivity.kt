@@ -4,8 +4,10 @@ import android.app.SearchManager
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Selection
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.method.ScrollingMovementMethod
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
@@ -23,6 +25,7 @@ import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.base.BaseActivity
+import ru.skillbranch.skillarticles.ui.custom.SearchFocusSpan
 import ru.skillbranch.skillarticles.ui.custom.SearchSpan
 import ru.skillbranch.skillarticles.viewmodels.*
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
@@ -70,10 +73,34 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
                 SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
+
+        // scroll to first found element
+        renderSearchPosition(0)
     }
 
     override fun renderSearchPosition(searchPosition: Int) {
-        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
+        val content = tv_text_content.text as Spannable
+        val bgColor = Color.RED
+        val fgColor = Color.WHITE
+
+        val spans = content.getSpans<SearchSpan>()
+        val focusSpans = content.getSpans<SearchFocusSpan>()
+
+        // clear last search position
+        focusSpans.forEach { content.removeSpan(it) }
+
+        if (spans.isNotEmpty()) {
+            // find position span
+            val result = spans[searchPosition]
+            Selection.setSelection(content, content.getSpanStart(result))
+            content.setSpan(
+                SearchFocusSpan(bgColor, fgColor),
+                content.getSpanStart(result),
+                content.getSpanEnd(result),
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
     }
 
     override fun clearSearchResult() {
@@ -177,6 +204,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         if (data.isSearch) showSearchBar() else hideSearchBar()
 
         if (data.searchResults.isNotEmpty()) renderSearchResult(data.searchResults)
+        if (data.searchResults.isNotEmpty()) renderSearchPosition(data.searchPosition)
 
         bottombar.setSearchState(data.isSearch)
 
@@ -208,6 +236,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         } else if (tv_text_content.text == "loading") { // TODO: change this
             val content = data.content.first() as String
             tv_text_content.setText(content, TextView.BufferType.SPANNABLE)
+            tv_text_content.movementMethod = ScrollingMovementMethod()
         }
 
         // bind toolbar

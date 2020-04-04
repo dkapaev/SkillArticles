@@ -3,7 +3,6 @@ package ru.skillbranch.skillarticles.ui
 import android.app.SearchManager
 import android.content.Context
 import android.graphics.Color
-import android.os.Bundle
 import android.text.Selection
 import android.text.Spannable
 import android.text.SpannableString
@@ -23,6 +22,7 @@ import kotlinx.android.synthetic.main.layout_bottombar.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.delegates.AttrValue
+import ru.skillbranch.skillarticles.delegates.RenderProp
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.base.BaseActivity
@@ -37,26 +37,15 @@ import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
 class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
     override val binding: Binding by lazy { ArticleBinding() }
-    override lateinit var viewModel: ArticleViewModel
+    override val viewModel: ArticleViewModel by lazy {
+        val vmFactory = ViewModelFactory("0")
+        return@lazy ViewModelProvider(this, vmFactory).get(ArticleViewModel::class.java)
+    }
     override val layout: Int = R.layout.activity_root
     private lateinit var searchView: SearchView
 
     private val bgColor by AttrValue(R.attr.colorSecondary)
     private val fgColor by AttrValue(R.attr.colorOnSecondary)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val vmFactory = ViewModelFactory("0")
-        viewModel = ViewModelProvider(this, vmFactory).get(ArticleViewModel::class.java)
-        viewModel.observeState(this) {
-            renderUi(it)
-        }
-
-        viewModel.observeNotifications(this) {
-            renderNotification(it)
-        }
-    }
 
     override fun setupViews() {
         setupToolbar()
@@ -295,10 +284,47 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     inner class ArticleBinding() : Binding() {
+        private var isLike: Boolean by RenderProp(false) { btn_like.isChecked = it }
+        private var isBookmark: Boolean by RenderProp(false) { btn_bookmark.isChecked = it }
+        private var isShowMenu: Boolean by RenderProp(false) {
+            btn_settings.isChecked = it
+            if (it) submenu.open() else submenu.close()
+        }
+        private var title: String by RenderProp("loading") { toolbar.title = it }
+        private var category: String by RenderProp("loading") { toolbar.subtitle = it }
+        private var categoryIcon: Int by RenderProp(R.drawable.logo_placeholder) { toolbar.logo = getDrawable(it) }
+
+        private var isBigText: Boolean by RenderProp(false) {
+            if (it) {
+                tv_text_content.textSize = 18f
+                btn_text_up.setChecked(true)
+                btn_text_down.setChecked(false)
+            } else {
+                tv_text_content.textSize = 14f
+                btn_text_up.setChecked(false)
+                btn_text_down.setChecked(true)
+            }
+        }
+
+        private var isDarkMode: Boolean by RenderProp(value = false, needInit = false) {
+            switch_mode.isChecked = it
+            delegate.localNightMode = if (it) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        }
+
         override fun onFinishInflate() {
         }
 
         override fun bind(data: IViewModelState) {
+            data as ArticleState
+            isLike = data.isLike
+            isBookmark = data.isBookmark
+            isShowMenu = data.isShowMenu
+            isBigText = data.isBigText
+            isDarkMode = data.isDarkMode
+
+            if (data.title != null) title = data.title
+            if (data.category != null) category = data.category
+            if (data.categoryIcon != null) categoryIcon = data.categoryIcon as Int
         }
     }
 }

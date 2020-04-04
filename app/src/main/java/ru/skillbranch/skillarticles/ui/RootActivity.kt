@@ -123,11 +123,13 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         // overriding maxWidth here is a workaround that helps SearchView to expand full width
         searchView.maxWidth = Int.MAX_VALUE
 
-        if (binding.isSearch) searchMenuItem.expandActionView() else searchMenuItem.collapseActionView()
-        searchView.setQuery(binding.searchQuery, false)
-
-        // prevent software keyboard from popping up when activity is recreated
-        searchView.clearFocus()
+        if (binding.isSearch) {
+            searchMenuItem.expandActionView()
+            searchView.setQuery(binding.searchQuery, false)
+            if (binding.isFocusedSearch) searchView.requestFocus() else searchView.clearFocus()
+        } else {
+            searchMenuItem.collapseActionView()
+        }
 
         searchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(menuItem: MenuItem?): Boolean {
@@ -240,7 +242,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
     inner class ArticleBinding : Binding() {
 
-        private var isFocusedSearch: Boolean = false
+        var isFocusedSearch: Boolean = false
 
         private var isLike: Boolean by RenderProp(false) { btn_like.isChecked = it }
         private var isBookmark: Boolean by RenderProp(false) { btn_bookmark.isChecked = it }

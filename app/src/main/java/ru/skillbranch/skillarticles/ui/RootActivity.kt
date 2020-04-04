@@ -26,14 +26,17 @@ import ru.skillbranch.skillarticles.delegates.AttrValue
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.base.BaseActivity
+import ru.skillbranch.skillarticles.ui.base.Binding
 import ru.skillbranch.skillarticles.ui.custom.SearchFocusSpan
 import ru.skillbranch.skillarticles.ui.custom.SearchSpan
 import ru.skillbranch.skillarticles.viewmodels.*
+import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
 import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
 
 class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
+    override val binding: Binding by lazy { ArticleBinding() }
     override lateinit var viewModel: ArticleViewModel
     override val layout: Int = R.layout.activity_root
     private lateinit var searchView: SearchView
@@ -102,7 +105,6 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
                 SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
-
     }
 
     override fun clearSearchResult() {
@@ -247,7 +249,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         if (data.categoryIcon != null) toolbar.logo = getDrawable(data.categoryIcon as Int)
     }
 
-    private fun renderNotification(notify: Notify) {
+    override fun renderNotification(notify: Notify) {
         val snackbar = Snackbar.make(coordinator_container, notify.message, Snackbar.LENGTH_LONG)
             .setAnchorView(bottombar)
 
@@ -289,6 +291,14 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
                 marginEnd = dpToIntPx(16)
                 toolbarLogo.layoutParams = this
             }
+        }
+    }
+
+    inner class ArticleBinding() : Binding() {
+        override fun onFinishInflate() {
+        }
+
+        override fun bind(data: IViewModelState) {
         }
     }
 }

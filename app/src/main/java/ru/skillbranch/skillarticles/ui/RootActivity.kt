@@ -3,6 +3,7 @@ package ru.skillbranch.skillarticles.ui
 import android.app.SearchManager
 import android.content.Context
 import android.graphics.Color
+import android.os.Bundle
 import android.text.Selection
 import android.text.Spannable
 import android.text.SpannableString
@@ -37,7 +38,7 @@ import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
 
 class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
-    override val binding: Binding by lazy { ArticleBinding() }
+    override val binding: ArticleBinding by lazy { ArticleBinding() }
     override val viewModel: ArticleViewModel by lazy {
         val vmFactory = ViewModelFactory("0")
         return@lazy ViewModelProvider(this, vmFactory).get(ArticleViewModel::class.java)
@@ -122,9 +123,8 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         // overriding maxWidth here is a workaround that helps SearchView to expand full width
         searchView.maxWidth = Int.MAX_VALUE
 
-        val articleState = viewModel.currentState
-        if (articleState.isSearch) searchMenuItem.expandActionView() else searchMenuItem.collapseActionView()
-        searchView.setQuery(articleState.searchQuery, false)
+        if (binding.isSearch) searchMenuItem.expandActionView() else searchMenuItem.collapseActionView()
+        searchView.setQuery(binding.searchQuery, false)
 
         // prevent software keyboard from popping up when activity is recreated
         searchView.clearFocus()
@@ -240,6 +240,8 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
     inner class ArticleBinding : Binding() {
 
+        private var isFocusedSearch: Boolean = false
+
         private var isLike: Boolean by RenderProp(false) { btn_like.isChecked = it }
         private var isBookmark: Boolean by RenderProp(false) { btn_bookmark.isChecked = it }
 
@@ -276,13 +278,13 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
         private var isLoadingContent: Boolean by ObserveProp(true)
 
-        private var isSearch: Boolean by ObserveProp(false) {
+        var isSearch: Boolean by ObserveProp(false) {
             if (it) showSearchBar() else hideSearchBar()
         }
 
-        private var searchQuery: String? = null
-        private var searchPosition: Int by ObserveProp(0)
-        private var searchResults: List<Pair<Int, Int>> by ObserveProp(emptyList())
+        var searchQuery: String? = null
+        var searchPosition: Int by ObserveProp(0)
+        var searchResults: List<Pair<Int, Int>> by ObserveProp(emptyList())
 
         override fun onFinishInflate() {
             dependsOn<Boolean, Boolean, List<Pair<Int, Int>>, Int>(
@@ -327,6 +329,14 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
             searchQuery = data.searchQuery
             searchPosition = data.searchPosition
             searchResults = data.searchResults
+        }
+
+        override fun saveUi(outState: Bundle) {
+            outState.putBoolean(::isFocusedSearch.name, (::searchView.isInitialized && searchView.hasFocus()))
+        }
+
+        override fun restoreUi(savedState: Bundle) {
+            isFocusedSearch = savedState.getBoolean(::isFocusedSearch.name)
         }
     }
 }

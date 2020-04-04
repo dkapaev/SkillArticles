@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.layout_bottombar.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import ru.skillbranch.skillarticles.R
+import ru.skillbranch.skillarticles.delegates.AttrValue
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.base.BaseActivity
@@ -36,6 +37,9 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     override lateinit var viewModel: ArticleViewModel
     override val layout: Int = R.layout.activity_root
     private lateinit var searchView: SearchView
+
+    private val bgColor by AttrValue(R.attr.colorSecondary)
+    private val fgColor by AttrValue(R.attr.colorOnSecondary)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +63,6 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
     override fun renderSearchResult(searchResult: List<Pair<Int, Int>>) {
         val content = tv_text_content.text as Spannable
-        val bgColor = Color.RED
-        val fgColor = Color.WHITE
 
         // clear entry search result
         clearSearchResult()

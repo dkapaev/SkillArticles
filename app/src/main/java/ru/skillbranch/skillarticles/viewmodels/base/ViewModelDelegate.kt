@@ -2,7 +2,7 @@ package ru.skillbranch.skillarticles.viewmodels.base
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -15,9 +15,9 @@ class ViewModelDelegate<T : ViewModel>(
     override fun getValue(thisRef: FragmentActivity, property: KProperty<*>): T {
         if (value == null) {
             if (arg == null) {
-                value = ViewModelProvider(thisRef).get(clazz)
+                value = ViewModelProviders.of(thisRef).get(clazz)
             } else {
-                value = ViewModelProvider(thisRef, ViewModelFactory(arg)).get(clazz)
+                value = ViewModelProviders.of(thisRef, ViewModelFactory(arg)).get(clazz)
             }
         }
         return value!!

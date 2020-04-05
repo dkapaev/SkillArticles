@@ -29,6 +29,7 @@ class RenderProp<T>(
 
     // register additional listener
     fun addListener(listener: () -> Unit) {
+        listeners.add(listener)
     }
 }
 

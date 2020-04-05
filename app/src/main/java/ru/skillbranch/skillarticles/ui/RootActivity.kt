@@ -76,8 +76,6 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
     override fun renderSearchPosition(searchPosition: Int) {
         val content = tv_text_content.text as Spannable
-        val bgColor = Color.RED
-        val fgColor = Color.WHITE
 
         val spans = content.getSpans<SearchSpan>()
         val focusSpans = content.getSpans<SearchFocusSpan>()
@@ -86,7 +84,6 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         focusSpans.forEach { content.removeSpan(it) }
 
         if (spans.isNotEmpty()) {
-            // find position span
             val result = spans[searchPosition]
             Selection.setSelection(content, content.getSpanStart(result))
             content.setSpan(
@@ -111,6 +108,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
     override fun hideSearchBar() {
         bottombar.setSearchState(false)
+        scroll.setMarginOptionally(bottom = dpToIntPx(0))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -151,12 +149,13 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
                 // and keyboard devices firing twice if a keyboard enter is used
                 // see https://code.google.com/p/android/issues/detail?id=24599
                 searchView.clearFocus()
-                return false
+                viewModel.handleSearch(query)
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 viewModel.handleSearch(newText)
-                return false
+                return true
             }
         })
 

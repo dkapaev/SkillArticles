@@ -5,9 +5,9 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
-import ru.skillbranch.skillarticles.ui.custom.Bottombar
 import kotlin.math.max
 import kotlin.math.min
+import ru.skillbranch.skillarticles.ui.custom.Bottombar
 
 class BottombarBehavior<V : View>(context: Context, attrs: AttributeSet) :
     CoordinatorLayout.Behavior<V>(context, attrs) {

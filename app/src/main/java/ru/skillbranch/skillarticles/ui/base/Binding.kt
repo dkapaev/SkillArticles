@@ -2,7 +2,7 @@ package ru.skillbranch.skillarticles.ui.base
 
 import android.os.Bundle
 import kotlin.reflect.KProperty
-import ru.skillbranch.skillarticles.delegates.RenderProp
+import ru.skillbranch.skillarticles.ui.delegates.RenderProp
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 
 abstract class Binding {

@@ -85,10 +85,6 @@ abstract class BaseViewModel<T : IViewModelState> (initState: T) : ViewModel() {
     fun restoreState(savedState: Bundle) {
         state.value = currentState.restore(savedState) as T
     }
-
-    internal inline fun <reified VM: ViewModel> provideViewModel(arg : Any?) : ViewModelDelegate<VM> {
-        return ViewModelDelegate(VM::class.java, arg)
-    }
 }
 
 class Event<out E>(private val content: E) {

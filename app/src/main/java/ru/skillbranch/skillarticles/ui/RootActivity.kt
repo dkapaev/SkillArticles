@@ -2,7 +2,6 @@ package ru.skillbranch.skillarticles.ui
 
 import android.app.SearchManager
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Selection
 import android.text.Spannable

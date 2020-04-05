@@ -22,7 +22,7 @@ import ru.skillbranch.skillarticles.viewmodels.base.Notify
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class Task3ExampleInstrumentedTest {
     @get:Rule
     val testRule = InstantTaskExecutorRule()
 
